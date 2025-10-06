@@ -36,6 +36,7 @@ import argparse
 import pyfits
 import os
 import time
+import numpy as np
 
 def main(args):
 
@@ -54,11 +55,11 @@ def main(args):
     for base in imagesbase:
         images.append(base+'.'+args.extension)
         if not os.path.exists(images[-1]):
-            print "Error: Image",images[-1],"does not exist"
+            print("Error: Image",images[-1],"does not exist") 
             return 1
         avgpbs.append(base+'0.'+args.avgpbext)
         if not os.path.exists(avgpbs[-1]):
-            print "Error: PB image",avgpbs[-1],"does not exist"
+            print("Error: PB image",avgpbs[-1],"does not exist") 
             return 1
 
     # Collect weights and invert if requested
@@ -69,13 +70,13 @@ def main(args):
         if args.invertwt:
             weights = 1./weights
         if len(weights) != len(images):
-            print "Error: List of weights is not the same length as list of images."
+            print("Error: List of weights is not the same length as list of images.") 
             return 1
-    print "Combining images"
+    print("Combining images") 
     formstr = '{0:45s}  {1:45s} {2:s}  {3:s} {4:s} {5:s}'
-    print formstr.format("-----","--------","------------","-------","-------","------")
-    print formstr.format("Image", "PB image","Norm. weight", "Maj(ac)", "Min(ac)","PA(deg)")
-    print formstr.format("-----","--------","------------","-------","-------","------")
+    print(formstr.format("-----","--------","------------","-------","-------","------")) 
+    print(formstr.format("Image", "PB image","Norm. weight", "Maj(ac)", "Min(ac)","PA(deg)")) 
+    print(formstr.format("-----","--------","------------","-------","-------","------")) 
 
     for i in range(len(images)):
         this_pim = pim.image(images[i])
@@ -86,18 +87,18 @@ def main(args):
         bpar_pa = quanta.quantity(info_dict['positionangle']).get_value('deg')
         psf_fwhm.append([bpar_ma, bpar_mi, bpar_pa])
         frequency.append(this_pim.info()['coordinates']['spectral2']['restfreq'])
-        print '{0:45.45s}  {1:45.45s} {2:0.2f}          {3:0.2f}    {4:0.2f}    {5:0.2f}'.format(images[i], avgpbs[i], weights[i]/sum(weights), bpar_ma*60, bpar_mi*60,bpar_pa)
+        print('{0:45.45s}  {1:45.45s} {2:0.2f}          {3:0.2f}    {4:0.2f}    {5:0.2f}'.format(images[i], avgpbs[i], weights[i]/sum(weights), bpar_ma*60, bpar_mi*60,bpar_pa)) 
 
     psf_fwhm = np.array(psf_fwhm)
     frequency = np.array(frequency)
     mean_psf_fwhm = np.mean(psf_fwhm, axis=0)
     mean_frequency = np.mean(frequency)
-    print '\nmean Beam: {0:0.3f} maj (arcmin), {1:2.3f} min (arcmin), {2:0.2f} pa (deg)'.format(mean_psf_fwhm[0]*60, mean_psf_fwhm[1]*60, mean_psf_fwhm[2])
-    print '(Frequency (MHz):', mean_frequency*1e-6
+    print('\nmean Beam: {0:0.3f} maj (arcmin), {1:2.3f} min (arcmin), {2:0.2f} pa (deg)'.format(mean_psf_fwhm[0]*60, mean_psf_fwhm[1]*60, mean_psf_fwhm[2])) 
+    print('(Frequency (MHz):', mean_frequency*1e-6) 
 
     if np.max(mean_frequency-frequency)/mean_frequency > 1e-6:
-        print '\n\nWARNING.\nAre you using  images from different bands?'
-        print 'Frequencies (Hz):', frequency
+        print('\n\nWARNING.\nAre you using  images from different bands?') 
+        print('Frequencies (Hz):', frequency) 
         time.sleep(2) # give user time to see this ...
 
     # Initialize some vectors
@@ -154,7 +155,7 @@ def main(args):
         print('Using the regular mosaic mode.')
         master_dec = np.arange(min(declims),max(declims),min(decinc))
         if max(raleft)-min(raright) > 5.*np.pi/3.: # crossed RA=0
-            print "Warning: I think the mosaic crosses RA=0, treating the coordinates as such."
+            print("Warning: I think the mosaic crosses RA=0, treating the coordinates as such.") 
             ##ralims[ralims>np.pi] -= 2.*np.pi
             #for i in range(len(ralims)):
             #    if ralims[i]>np.pi: ralims[i] = ralims[i]-2.*np.pi
@@ -167,8 +168,8 @@ def main(args):
                 xboundary = (lmra-args.maxwidth)/2
                 master_ra = master_ra[xboundary:-xboundary]
         if args.verbose:
-            print "Found ra,dec pixel increments (arcsec):"
-            print np.array(rainc)*206265.,np.array(decinc)*206265.
+            print("Found ra,dec pixel increments (arcsec):") 
+            print(np.array(rainc)*206265.,np.array(decinc)*206265.) 
         ma = pims[-1].coordinates()
         ma['direction'].set_referencepixel([len(master_dec)/2,len(master_ra)/2])
         ma['direction'].set_increment([decinc[np.argmin(np.abs(decinc))],rainc[np.argmin(np.abs(rainc))]])
@@ -244,7 +245,7 @@ def main(args):
 
     return
 
-print "LOFAR mosaic generator, v"+version+'\n'
+print("LOFAR mosaic generator, v"+version+'\n') 
 parser = argparse.ArgumentParser(description="Mosaic MSSS images.")
 parser.add_argument('images',metavar='list_of_images',help='Input image names without extension, as a comma separated list (no spaces). Note that the "0" in the avgpb filenames will be accounted for in the script, do not include it here. Can also be the name of file containing the file list. A list can be generated like this: ls -d1 ../ncp_raw/*BAND4*.corr | sed s@.restored.corr/@@g > input.txt')
 parser.add_argument('-x','--extension',help='Image extension to combine [default restored.corr]',default='restored.corr')

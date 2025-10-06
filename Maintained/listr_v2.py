@@ -19,7 +19,7 @@ def printarray (a,ndig,uant=['0','0'],ants=[]):
         if a[i].min()==a[i].max()==a[:,i].min()==a[:,i].max()==0:
             delant=np.append(delant,int(i))
     if len(delant):
-        print 'Removing ',len(delant),' antennas with no data '
+        print('Removing ',len(delant),' antennas with no data ') 
         a=np.delete(a,delant,0)
         a=np.delete(a,delant,1)
     uant=np.delete(uant,delant)    # ! not good if antennas nonsequential
@@ -40,7 +40,7 @@ def printarray (a,ndig,uant=['0','0'],ants=[]):
             sys.stdout.write('  '+ants[uant[i]])
         except:
             pass
-        print ' '
+        print(' ') 
 
 # main routine: listr     v.2 Neal Jackson 2011.06.01
 #                             neal.jackson@manchester.ac.uk
@@ -103,7 +103,7 @@ def listr (ms,utstart=0.0,utend=1.0E+11,datacolumn='DATA',\
             LR=np.arctan2(dat[1][c].imag,dat[1][c].real)
             RL=np.arctan2(dat[2][c].imag,dat[2][c].real)
     else:
-        print 'unknown datatype, allowed types are amp and phase'
+        print('unknown datatype, allowed types are amp and phase') 
         return
     
     ll = np.zeros ((len(uscan),len(uifno),len(uant),len(uant)))
@@ -153,23 +153,23 @@ def listr (ms,utstart=0.0,utend=1.0E+11,datacolumn='DATA',\
     for i in range(len(uscan)):
         for j in range(len(uifno)):
             if ll[i][j].max()==0:
-                print 'No data'
+                print('No data') 
                 break
             fac=10.0**(float(ndig)-np.ceil(np.nanmax(np.log10(ll[i][j]))))
-            print 'scan %d: IF %d: fluxes *%d = Jy\n' % (i,j,fac)
+            print('scan %d: IF %d: fluxes *%d = Jy\n' % (i,j,fac)) 
             ill= np.asarray(ll*fac,dtype='i4')
             printarray (ill[i][j],ndig,uant,ants)
 
 
     if docross:
-        print '\nCross-hands:\n'
+        print('\nCross-hands:\n') 
         for i in range(len(uscan)):
             for j in range(len(uifno)):
                 if cc[i][j].max()==0:
-                    print 'No data'
+                    print('No data') 
                     break
                 fac=10.0**(float(ndig)-np.ceil(np.nanmax(np.log10(cc[i][j]))))
-                print 'scan %d: IF %d: fluxes *%d = Jy\n' % (i,j,fac)
+                print('scan %d: IF %d: fluxes *%d = Jy\n' % (i,j,fac)) 
                 icc= np.asarray(cc*fac,dtype='i4')
                 printarray (icc[i][j],ndig,uant,ants)
 #    return ill

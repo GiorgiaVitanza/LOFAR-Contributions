@@ -39,23 +39,23 @@ mask = options.mask
 shift = options.shift
 verbose = options.verbose
 
-print "Input BBS file = "+inbbs
-print "Output BBS file = "+outbbs
+print("Input BBS file = "+inbbs) 
+print("Output BBS file = "+outbbs) 
 
-if mask != None: print "Mask = "+mask
-if spidximg != None: print "Spectral index image = "+spidximg
+if mask != None: print("Mask = "+mask) 
+if spidximg != None: print("Spectral index image = "+spidximg) 
 if shift != None:
   try:
     (rashift, decshift) = shift.replace(' ', '').split(',')
     rashift = float(rashift)
     decshift = float(decshift)
-    print "Ra shift: ", rashift, "arcsec"
-    print "Dec shift: ", decshift, "arcsec"
+    print("Ra shift: ", rashift, "arcsec") 
+    print("Dec shift: ", decshift, "arcsec") 
   except:
-    print "ERROR: bad formatted Ra,Dec shift. Should be something like \"-s 2,5\""
+    print("ERROR: bad formatted Ra,Dec shift. Should be something like \"-s 2,5\"") 
 
 if spidximg == None and mask == None and shift == None:
-  print "Nothing to do!"
+  print("Nothing to do!") 
   exit(0)
 sys.stdout.flush()
 
@@ -63,10 +63,10 @@ sys.stdout.flush()
 names = ['Name', 'Type', 'Patch', 'Ra', 'Dec', 'I', 'Q', 'U', 'V', 'ReferenceFrequency', 'SpectralIndexDegree', 'SpectralIndex', 'MajorAxis', 'MinorAxis', 'Orientation']
 formats = ['S30', 'S30', 'S30', 'S30', 'S30', float, float, float, float, float, int, float, float, float, float]
 try:
-  if verbose: print "WARNING: skipping first 5 rows, check that you are not loosing any CC"
+  if verbose: print("WARNING: skipping first 5 rows, check that you are not loosing any CC") 
   bbsdata = np.loadtxt(inbbs, skiprows=5, comments='#', delimiter=", ", dtype=np.dtype({'names':names, 'formats':formats}))
 except IOError:
-  print "ERROR: error opening BBS file (",inbbs,"), probably a wrong name/format"
+  print("ERROR: error opening BBS file (",inbbs,"), probably a wrong name/format") 
   exit(1)
 
 bbsnewdata = []
@@ -76,7 +76,7 @@ if mask != None:
   try:
     maskdata = pyrap.images.image(mask)
   except:
-    print "ERROR: error opening MASK (",mask,"), probably a wrong name/format"
+    print("ERROR: error opening MASK (",mask,"), probably a wrong name/format") 
     exit(1)
 
 # Open spidx image
@@ -84,7 +84,7 @@ if spidximg != None:
   try:
     spidxdata = pyrap.images.image(spidximg)
   except:
-    print "ERROR: error opening SPIDX image (",spidximg,"), probably a wrong name/format"
+    print("ERROR: error opening SPIDX image (",spidximg,"), probably a wrong name/format") 
     exit(1)
 
 # for each component find the relative mask pix, spidx pix and do the shift
@@ -104,11 +104,12 @@ for cc in bbsdata:
 	  math.radians(cm.dmstodec(*dec.split(".",2))), math.radians(cm.hmstora(*ra.split(":")))])
     try:
       if not maskdata.getdata()[0][0][math.floor(pixY)][math.floor(pixX)]:
-	if verbose: print "Removing component \"",name,"\" because is masked."
-	continue
+        if verbose: 
+          print("Removing component \"",name,"\" because is masked.") 
+          continue
     except:
-      print "WARNING: failed to find a good mask value for component \"", name, "\"."
-      print "-> Removing this component"
+      print("WARNING: failed to find a good mask value for component \"", name, "\".") 
+      print("-> Removing this component") 
       continue
    
   if spidximg != None:
@@ -120,8 +121,8 @@ for cc in bbsdata:
       cc['SpectralIndex'] = '%.2f' % val
       if isNaN(val): raise ValueError('Nan occurred')
     except:
-      print "WARNING: failed to find a good spidx value for component \"", name, "\"."
-      print "-> Set spectral index to 0.0"
+      print("WARNING: failed to find a good spidx value for component \"", name, "\".") 
+      print("-> Set spectral index to 0.0") 
       cc['SpectralIndex'] = '0.0'
 
   bbsnewdata.append([cc['Name'], cc['Type'], cc['Patch'], cc['Ra'], cc['Dec'], cc['I'], cc['Q'], cc['U'], cc['V'], cc['ReferenceFrequency'], cc['SpectralIndexDegree'], cc['SpectralIndex'], cc['MajorAxis'], cc['MinorAxis'], cc['Orientation']])

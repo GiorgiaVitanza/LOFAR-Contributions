@@ -14,10 +14,10 @@ import sys
 import os
 import numpy as np
 from numpy import ma
-import casac
+#import casac
 import inspect
 import string
-import ft
+# import ft
 
 def fromsky (vis,model_file):
     a=inspect.stack()
@@ -57,7 +57,7 @@ def fromsky (vis,model_file):
             break
         if not 'point' in a and not 'gauss' in a:
             continue
-        print a
+        print(a)
         a=a.split(',')
         pos='J2000 '+a[cra].replace(':','h',1).replace(':','m',1)+' '+\
                    a[cdec].replace(':','d',1).replace(':','m',1)

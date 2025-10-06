@@ -11,9 +11,9 @@ import pylab
 import numpy
 
 if len(sys.argv) != 3:
-        print 'Usage: provide 2 input arguments\n (1) catalog filename\n (2) clip percentage e.g. 90'
-        print 'An output file will be produced, which is the input'
-        print 'catalog filename with ".clipped" appended'
+        print('Usage: provide 2 input arguments\n (1) catalog filename\n (2) clip percentage e.g. 90') 
+        print('An output file will be produced, which is the input') 
+        print('catalog filename with ".clipped" appended') 
         exit()
 
 outfilename = sys.argv[1]+'.clipped'
@@ -41,9 +41,9 @@ for line in open(sys.argv[1]):
                         print >>of, line.rstrip("\r\n")
 
 temp = sorted(temp,reverse=True)
-print 'Found cumulative flux %f' % (cumflux)
+print('Found cumulative flux %f' % (cumflux)) 
 cliplevel = percentage/100.*cumflux
-print 'Clipping at cumulative flux of %f percent = %f' % (percentage, cliplevel)
+print('Clipping at cumulative flux of %f percent = %f' % (percentage, cliplevel)) 
 
 cumflux = 0.0
 cumfluxlist = []
@@ -60,12 +60,12 @@ for t in temp:
 
 of.close()
 if keptlines == 0:
-        print 'WARNING!!! There were no compenents in the output file.'
-        print 'Perhaps you need to set a higher percentage level.'
-        print 'The results are in %s' % (outfilename)
+        print('WARNING!!! There were no compenents in the output file.') 
+        print('Perhaps you need to set a higher percentage level.') 
+        print('The results are in %s' % (outfilename)) 
 else:
-        print 'Done! Results are in %s' % (outfilename)
-        print 'Kept %d / %d skymodel components' % (keptlines, nlines)
+        print('Done! Results are in %s' % (outfilename)) 
+        print('Kept %d / %d skymodel components' % (keptlines, nlines)) 
 
 pylab.plot(range(len(cumfluxlist)),cumfluxlist,'b.')
 pylab.plot([0,len(cumfluxlist)],[cliplevel,cliplevel],'k--')

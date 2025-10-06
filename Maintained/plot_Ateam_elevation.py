@@ -31,8 +31,8 @@ targets = [ {'name' : 'CasA', 'ra' : 6.123487680622104,  'dec' : 1.0265153995604
 if len(sys.argv) == 2:
    msname = sys.argv[1]
 else:
-   print "Usage"
-   print "   plot_Ateam_elevation.py <msname>"
+   print("Usage") 
+   print("   plot_Ateam_elevation.py <msname>") 
    
 
 # Create a measures object
