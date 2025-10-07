@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 from numpy import ma
-import casac
+#import casac
 import inspect
 import string
 
@@ -111,7 +111,7 @@ def listr (ms,utstart=0.0,utend=1.0E+11,datacolumn='DATA',\
     cc = np.zeros ((len(uscan),len(uifno),len(uant),len(uant)))
     cci = np.zeros ((len(uscan),len(uifno),len(uant),len(uant)))
 
-    for i in xrange (dat.shape[2]):
+    for i in xrange(dat.shape[2]):
         if 10*i/dat.shape[2] != 10*(i-1)/dat.shape[2]:
             sys.stdout.write('.')
             sys.stdout.flush()
