@@ -60,9 +60,9 @@ import numpy
 
 def main(options):
 
-    cI = numpy.complex(0.0, 1.0)
+    cI = complex(0.0, 1.0)
 
-    inms = options.inms
+    inms = "/home/giorgia/LOFAR-Contributions/Maintained/sco_174_iter0.ms"
     if inms == "":
         print("Error: you have to specify an input MS, use -h for help")
         return
