@@ -1,9 +1,8 @@
 import sys
 import pylab as lb
-import numpy
+import numpy as np
 import pyrap.tables as pt
 import coordinates_mode as co
-from numpy import *
 from scipy import *
 import matplotlib.font_manager as font_manager
 
@@ -64,10 +63,10 @@ def phase(antenna1, antenna2):
 
         if count != 0:
             spectral_mean = total / count
-            phase_element = arctan2(spectral_mean.imag, spectral_mean.real)
+            phase_element = np.arctan2(spectral_mean.imag, spectral_mean.real)
             mphase.append(phase_element)
         else:
-            mphase.append(nan)
+            mphase.append(np.nan)
 
     print(len(mphase))
     print(len(time))
@@ -86,17 +85,24 @@ elev3, timehr3, mphase02 = phase(ant1, ant3)
 
 # The closure phase is reduced modulo 360deg to the range -180 to +180. 
 # The closure phase is undefined (NaN) if any of the constituent visibility phases is absent or flagged
+min_len = min(len(mphase01), len(mphase12), len(mphase02))
+closure = (np.array(mphase01[:min_len]) +
+           np.array(mphase12[:min_len]) -
+           np.array(mphase02[:min_len])) % (2 * np.pi)
 
-closure = (array(mphase01) + array(mphase12) - array(mphase02)) % (2 * pi)
-closure[where(closure > pi)] = closure[where(closure > pi)] - (2 * pi)
-closure[where(closure < -pi)] = closure[where(closure < -pi)] + (2 * pi)
+#closure = (array(mphase01) + array(mphase12) - array(mphase02)) % (2 * pi)
+closure[np.where(closure > np.pi)] = closure[np.where(closure > np.pi)] - (2 * np.pi)
+closure[np.where(closure < -np.pi)] = closure[np.where(closure < -np.pi)] + (2 * np.pi)
 
 titlestring = "Closure Phase Analysis"
 ylabelstring = "Closure Phase/Radians"
 
 if xaxis == 'time':
     xlabelstring = "Time Since Obs Start/hours"
-    lb.plot(timehr, closure, ',')
+    min_len = min(len(timehr), len(closure))
+    lb.plot(timehr[:min_len], closure[:min_len], ',')
+
+    #lb.plot(timehr, closure, ',')
 elif xaxis == 'elevation':
     xlabelstring = "Elevation Angle/degrees"
     lb.plot(elev, closure, ',')

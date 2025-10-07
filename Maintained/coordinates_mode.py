@@ -32,7 +32,9 @@ def jd2lst(jd, lon=core_lon):
     Date.  Default logitude is that of LOFAR core: note that wcstools takes a
     positive longitude as being WEST."""
     import ctypes
-    wcstools = ctypes.cdll.LoadLibrary(wcstools_path)
+    wcstools = ctypes.cdll.LoadLibrary("/usr/lib/x86_64-linux-gnu/libwcstools.so.1")
+
+
     wcstools.setlongitude(ctypes.c_double(lon))
     wcstools.jd2lst.restype = ctypes.c_double
     c_jd = ctypes.c_double(jd)
